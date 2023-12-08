@@ -26,7 +26,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// Asynchronously loads avatar template data and creates button elements for each template.
         /// Each button is created with an icon fetched from the template's image URL.
         /// </summary>
-        public async void LoadAndCreateButtons()
+        public async void LoadAndCreateButtons(OutfitGender gender)
         {
             await LoadTemplateData();
             CreateButtons(avatarTemplates.ToArray(), async (button, asset) =>
@@ -35,6 +35,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 var url = $"{asset.ImageUrl}";
                 var texture = await webRequestDispatcher.DownloadTexture(url);
                 button.SetIcon(texture);
+                button.gameObject.SetActive(gender == asset.Gender);
             });
         }
 
