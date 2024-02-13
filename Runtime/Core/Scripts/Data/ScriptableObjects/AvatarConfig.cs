@@ -20,6 +20,8 @@ namespace ReadyPlayerMe.Core
         public TextureAtlas TextureAtlas;
         [Range(256, 1024), Tooltip("If set to none the mesh, materials and textures will not be combined into 1. (2 if an assets texture contains transparency)")]
         public int TextureSizeLimit = 1024;
+        [Tooltip("The quality of the textures to load. This will affect the load time and the quality of the textures.")]
+        public TextureQuality TextureQuality = TextureQuality.Medium;
         [Tooltip("Add textures which avatar will include")]
         public TextureChannel[] TextureChannel =
         {

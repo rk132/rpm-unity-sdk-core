@@ -6,6 +6,7 @@ namespace ReadyPlayerMe.Core
         public const string LOD = "lod";
         public const string TEXTURE_ATLAS = "textureAtlas";
         public const string TEXTURE_SIZE_LIMIT = "textureSizeLimit";
+        public const string TEXTURE_QUALITY = "textureQuality";
         public const string TEXTURE_CHANNELS = "textureChannels";
         public const string MORPH_TARGETS = "morphTargets";
         public const string USE_HANDS = "useHands";

@@ -48,6 +48,7 @@ namespace ReadyPlayerMe.Core.Editor
             SetupLod();
             SetupPose();
             SetupTextureAtlas();
+            SetupTextureQuality();
             SetupTextureSizeLimit();
             SetupUseHands();
             SetupCompressionPackages();
@@ -94,6 +95,18 @@ namespace ReadyPlayerMe.Core.Editor
             textureAtlas.RegisterValueChangedCallback(x =>
                 {
                     avatarConfigTarget.TextureAtlas = (TextureAtlas) x.newValue;
+                    Save();
+                }
+            );
+        }
+
+        private void SetupTextureQuality()
+        {
+            var textureAtlas = root.Q<EnumField>("TextureQuality");
+            textureAtlas.SetValueWithoutNotify(avatarConfigTarget.TextureQuality);
+            textureAtlas.RegisterValueChangedCallback(x =>
+                {
+                    avatarConfigTarget.TextureQuality = (TextureQuality) x.newValue;
                     Save();
                 }
             );

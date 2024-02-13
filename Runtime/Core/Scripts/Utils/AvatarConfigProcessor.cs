@@ -29,6 +29,7 @@ namespace ReadyPlayerMe.Core
             queryBuilder.AddKeyValue(AvatarAPIParameters.LOD, ((int) avatarConfig.Lod).ToString());
             queryBuilder.AddKeyValue(AvatarAPIParameters.TEXTURE_ATLAS, AvatarConfigMap.TextureAtlas[avatarConfig.TextureAtlas]);
             queryBuilder.AddKeyValue(AvatarAPIParameters.TEXTURE_SIZE_LIMIT, ProcessTextureSizeLimit(avatarConfig.TextureSizeLimit).ToString());
+            queryBuilder.AddKeyValue(AvatarAPIParameters.TEXTURE_QUALITY, avatarConfig.TextureQuality.ToString().ToLower());
             queryBuilder.AddKeyValue(AvatarAPIParameters.TEXTURE_CHANNELS, ProcessTextureChannels(avatarConfig.TextureChannel));
             if (avatarConfig.MorphTargets.Count > 0)
             {

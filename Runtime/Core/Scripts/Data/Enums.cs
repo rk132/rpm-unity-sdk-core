@@ -50,11 +50,11 @@ namespace ReadyPlayerMe.Core
     public enum Lod
     {
         [InspectorName("High (LOD0)")]
-        High,
+        High = 0,
         [InspectorName("Medium (LOD1)")]
-        Medium,
+        Medium = 1,
         [InspectorName("Low (LOD2)")]
-        Low
+        Low = 2
     }
 
     /// <summary>
@@ -70,6 +70,13 @@ namespace ReadyPlayerMe.Core
         Medium,
         [InspectorName("Low (256)")]
         Low
+    }
+
+    public enum TextureQuality
+    {
+        Low,
+        Medium,
+        High
     }
 
     public enum TextureChannel
