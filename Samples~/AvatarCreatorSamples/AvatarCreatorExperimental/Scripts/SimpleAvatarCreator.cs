@@ -23,7 +23,7 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorExperimental
         [SerializeField] private GameObject loading;
 
         [SerializeField] private BodyType bodyType = BodyType.FullBody;
-        private readonly OutfitGender gender = OutfitGender.Masculine;
+        private OutfitGender gender = OutfitGender.Masculine;
 
         private AvatarManager avatarManager;
         private GameObject avatar;
@@ -43,11 +43,37 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorExperimental
             loading.SetActive(false);
         }
 
+        public async void LoadAvatar(string avatarId)
+        {
+            loading.SetActive(true);
+            var newAvatar = await avatarManager.GetAvatar(avatarId, bodyType);
+            // Destroy the old avatar and replace it with the new one.
+            if (avatar != null)
+            {
+                Destroy(avatar);
+            }
+            avatar = newAvatar;
+            var avatarProperties = await avatarManager.GetAvatarProperties(avatarId);
+
+            SetupAvatar();
+
+            onAvatarCreated?.Invoke(avatarProperties);
+            loading.SetActive(false);
+        }
+
+        public async void SaveAvatar()
+        {
+            loading.SetActive(true);
+            await avatarManager.Save();
+            loading.SetActive(false);
+        }
+
         private void OnEnable()
         {
             // Subscribes to asset selection events when this component is enabled.
             foreach (var element in assetSelectionElements)
             {
+                element.SetBodyType(bodyType);
                 element.OnAssetSelected.AddListener(OnAssetSelection);
             }
 
@@ -113,6 +139,11 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorExperimental
             }
         }
 
+        public void CreateSecondTemplateAvatar()
+        {
+            CreateTemplateAvatar();
+        }
+
         /// <summary>
         /// Creates an avatar from a template and sets its initial properties.
         /// </summary>
@@ -123,10 +154,30 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorExperimental
             var templates = await avatarTemplateFetcher.GetTemplates();
             var avatarTemplate = templates[1];
 
-            var templateAvatarProps = await avatarManager.CreateAvatarFromTemplate(avatarTemplate.Id, bodyType);
+            return await LoadAvatarFromTemplate(avatarTemplate.Id);
+        }
+
+        public void LoadAvatarFromTemplate(IAssetData template)
+        {
+            LoadAvatarFromTemplate(template.Id);
+        }
+
+        public async Task<AvatarProperties> LoadAvatarFromTemplate(string templateId)
+        {
+            loading.SetActive(true);
+            var templateAvatarProps = await avatarManager.CreateAvatarFromTemplate(templateId, bodyType);
+
+            // Destroy the old avatar and replace it with the new one.
+            if (avatar != null)
+            {
+                Destroy(avatar);
+            }
             avatar = templateAvatarProps.Item1;
+            gender = templateAvatarProps.Item2.Gender;
             SetupAvatar();
+
             onAvatarCreated?.Invoke(templateAvatarProps.Item2);
+            loading.SetActive(false);
             return templateAvatarProps.Item2;
         }
 
@@ -137,7 +188,9 @@ namespace ReadyPlayerMe.Samples.AvatarCreatorExperimental
         {
             avatar.AddComponent<MouseRotationHandler>();
             avatar.AddComponent<AvatarRotator>();
-            avatar.GetComponent<Animator>().runtimeAnimatorController = animationController;
+            var animator = avatar.GetComponent<Animator>();
+            AvatarAnimationHelper.SetupAnimator(new AvatarMetadata() { BodyType = bodyType, OutfitGender = gender }, animator);
+            animator.runtimeAnimatorController = animationController;
         }
     }
 }
